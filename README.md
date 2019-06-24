@@ -2,6 +2,10 @@
 
 https://github.com/goadesign/goa
 
+## 概要
+ - Go (v1.12.6) + goa(v3.0.2) を利用する
+   - 上記の組み合わせは、後述するGoModulesが標準サポートされている
+
 ## usage
 ```bash
 # goa-cli関連のインストール(goaアプリケーション開発環境構築用)
@@ -23,9 +27,23 @@ $ make goa-run
 $ make swagger
 ```
 
-## 概要
- - Go (v1.12.6) + goa(v3.0.2) を利用する
-   - 上記の組み合わせは、後述するGoModulesが標準サポートされている
+## ディレクトリ構造
+
+```bash
+├── cmd # `goa example`で初期生成されるアプリケーション起動トリガー
+├── design # goaのAPI定義を記述
+├── docker # docker関連のファイルを配置する
+├── gen # `goa gen`の生成ファイル、手動でいじることはない
+├── src # 独自ソースコードの格納 (CleanArchtecureベース)
+│   ├── controller # `goa example`で生成されたControllerに当たるファイルの格納
+│   ├── domain # Domain層 データに関する定義とロジック
+│   ├── external # 外部接続層
+│   │   ├── mysql # mysqlからのデータ取得
+│   │   ├── redis # redisからのデータ取得
+│   │   └── http # APIからのデータ取得
+│   └── usecase # アプリケーション特有ビジネスロジック
+└── swagger-ui # swagger-ui用ファイル
+```
 
 ## 言語バージョン管理
  - 名前：goenv (2.0.0beta11)
@@ -172,7 +190,7 @@ goa-install:
  - `./gen`ディレクトリはAPI定義が変わるたびに再生成され、実装者が手動で変更を行わない
  - `./cmd`ディレクトリは最初に自動生成したのちに、実装者が手動で変更を加えられる場所
  - Controllerにあたるようなファイルがルートディレクトリにできてしまう(`./calc.go`)
-   - これは`goa example`コマンド実行後に`./controller`ディレクトリに移動して、`cmd/calc/main.go`のimportを変える
+   - これは`goa example`コマンド実行後に`./src/controller`ディレクトリに移動して、`cmd/calc/main.go`のimportを変える
 
 本来ソースコードの置換は良くないと考えているが、開発時にMac上で1度だけ実行する想定なので妥協
 
@@ -182,8 +200,9 @@ goa-install:
 goa-example:
 	@goa example $(REPO)/design
 	# ルートディレクトリにできるファイルをcontrollerへ移動 (BSD sedなのでMacでの動作想定)
-	@mv -n ./*.go controller/ \
-	&& sed -i .bak "s/\"$(REPO)\"/\"$(REPO)\/controller\"/g" cmd/$(APP_NAME)/main.go \
+	@if [ -e ./src ]; then mkdir -p src/controller; fi
+	@mv -n ./*.go src/controller/ \
+	&& sed -i .bak "s/\"$(REPO)\"/\"$(REPO)\/src\/controller\"/g" cmd/$(APP_NAME)/main.go \
 	&& rm -f cmd/$(APP_NAME)/main.go.bak \
 	&& rm -f ./*.go
 ```

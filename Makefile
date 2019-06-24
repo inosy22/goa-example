@@ -18,8 +18,9 @@ goa-gen:
 goa-example:
 	@goa example $(REPO)/design
 	# ルートディレクトリにできるファイルをcontrollerへ移動 (BSD sedなのでMacでの動作想定)
-	@mv -n ./*.go controller/ \
-	&& sed -i .bak "s/\"$(REPO)\"/\"$(REPO)\/controller\"/g" cmd/$(APP_NAME)/main.go \
+	@if [ -e ./src ]; then mkdir -p src/controller; fi
+	@mv -n ./*.go src/controller/ \
+	&& sed -i .bak "s/\"$(REPO)\"/\"$(REPO)\/src\/controller\"/g" cmd/$(APP_NAME)/main.go \
 	&& rm -f cmd/$(APP_NAME)/main.go.bak \
 	&& rm -f ./*.go
 
