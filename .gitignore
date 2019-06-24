@@ -1,0 +1,5 @@
+.idea/*
+cmd/calc/calc
+cmd/calc-cli/calc-cli
+
+go.sum

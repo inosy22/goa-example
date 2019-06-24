@@ -4,7 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	calcapi "goa-example"
+	calcapi "goa-example/controller"
 	calc "goa-example/gen/calc"
 	"log"
 	"net/url"
