@@ -34,14 +34,14 @@ $ make swagger
 ├── design # goaのAPI定義を記述
 ├── docker # docker関連のファイルを配置する
 ├── gen # `goa gen`の生成ファイル、手動でいじることはない
-├── src # 独自ソースコードの格納 (CleanArchtecureベース)
-│   ├── controller # `goa example`で生成されたControllerに当たるファイルの格納
-│   ├── domain # Domain層 データに関する定義とロジック
-│   ├── external # 外部接続層
-│   │   ├── mysql # mysqlからのデータ取得
-│   │   ├── redis # redisからのデータ取得
-│   │   └── http # APIからのデータ取得
-│   └── usecase # アプリケーション特有ビジネスロジック
+├── src # 独自ソースコードの格納 (CleanArchtectureベース)
+│   ├── controller # InterfaceAdapters: goaで生成されたController
+│   ├── domain # Enterprise BusinessRules: データに関する定義とロジック
+│   ├── gateway # InterfaceAdapters: Repository系
+│   │   ├── mysql # mysqlとのデータの送受信
+│   │   ├── redis # redisとのデータの送受信
+│   │   └── http # APIとのデータの送受信
+│   └── usecase # ApplicationBusinessRules: Service系
 └── swagger-ui # swagger-ui用ファイル
 ```
 
